@@ -5,14 +5,8 @@
 - XAMPP (recomendado para desarrollo local).
 
 ## 2. Instalación
-Ejecuta los scripts en el siguiente orden desde tu cliente MySQL (phpMyAdmin, MySQL Workbench o consola):
-1. `01_schema.sql` — Crea la BD y las tablas base.
-2. `02_constraints_indexes.sql` — Añade restricciones e índices.
-3. `03_functions.sql` — Crea procedimientos almacenados y funciones de negocio.
-4. `04_triggers.sql` — Establece lógica automática (subtotales, auditoría).
-5. `05_views_reports.sql` — Despliega vistas para dashboard y reportes.
-6. `06_seed.sql` — Carga datos de prueba y usuarios iniciales.
-7. *(Opcional)* `07_backup_restore.sql` contiene los comandos para hacer dump y restore de la BD.
+Ejecuta el script unificado desde tu cliente MySQL (phpMyAdmin, MySQL Workbench o consola):
+1. Importa y ejecuta `init.sql`. Este archivo contiene la creación de la base de datos, tablas, restricciones, funciones, triggers, vistas y datos de prueba iniciales.
 
 ## 3. Tablas
 | Tabla | Descripción | Relaciones Clave |

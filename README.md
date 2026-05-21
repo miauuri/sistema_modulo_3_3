@@ -18,13 +18,8 @@ Para ejecutar este proyecto, necesitarás un entorno de servidor web local, como
 2. **Configurar la Base de Datos:**
    - Abre tu gestor de base de datos preferido (por ejemplo, phpMyAdmin en `http://localhost/phpmyadmin/`).
    - Crea una nueva base de datos llamada `tecnomarket_db` (el cotejamiento recomendado es `utf8mb4_general_ci`).
-   - Importa los archivos SQL que se encuentran en la carpeta `database/` en orden:
-     1. `01_schema.sql`
-     2. `02_constraints_indexes.sql`
-     3. `03_functions.sql`
-     4. `04_triggers.sql`
-     5. `05_views_reports.sql`
-     6. `06_seed.sql` (para datos iniciales)
+   - Importa el archivo SQL unificado que se encuentra en la carpeta `database/`:
+     1. `init.sql` (contiene esquema, funciones, triggers y datos iniciales)
 
 3. **Configurar las credenciales (Opcional):**
    Por defecto, el sistema intentará conectarse a la base de datos local usando el usuario `root` sin contraseña. 
@@ -41,7 +36,7 @@ Para ejecutar este proyecto, necesitarás un entorno de servidor web local, como
 1. Inicia los servicios de Apache y MySQL desde el panel de control de tu entorno (ej. XAMPP Control Panel).
 2. Abre tu navegador web e ingresa a la siguiente URL (ajusta el nombre de la carpeta según corresponda):
    `http://localhost/sistema_modulo_3_3/`
-3. Si la base de datos incluye datos de semilla (`06_seed.sql`), podrás iniciar sesión con un usuario administrador predeterminado (consulta los datos en la base de datos si es necesario).
+3. Si la base de datos incluye los datos iniciales de `init.sql`, podrás iniciar sesión con un usuario administrador predeterminado (consulta los datos en la base de datos si es necesario).
 
 ## Estructura del Proyecto
 
