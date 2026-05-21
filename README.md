@@ -37,7 +37,7 @@ Para ejecutar este proyecto, necesitarás un entorno de servidor web local, como
 2. Abre tu navegador web e ingresa a la siguiente URL (ajusta el nombre de la carpeta según corresponda):
    `http://localhost/sistema_modulo_3_3/`
 3. Si la base de datos incluye los datos iniciales de `init.sql`, podrás iniciar sesión con un usuario administrador predeterminado.
-4. Para iniciar sesión, utiliza las credenciales por defecto: **Usuario:** `admin` | **Contraseña:** `admin123` para inicar como administrador, o **Empleado:** `empleado` | **Contraseña:** `empleado123` para inicar como empleado.
+4. Para iniciar sesión, utiliza las credenciales por defecto: **Usuario:** `admin` | **Contraseña:** `admin123` para inicar como administrador, o **Usuario:** `empleado` | **Contraseña:** `empleado123` para inicar como empleado.
 
 ## Estructura del Proyecto
 
