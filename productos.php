@@ -31,7 +31,7 @@ foreach($productos as $p) {
             <h2 class="font-outfit text-3xl font-bold text-gray-900">Inventario de Productos</h2>
             <p class="text-gray-500 mt-1">Gestiona el catálogo, precios y niveles de stock.</p>
         </div>
-        <button class="flex items-center gap-2 bg-[#2170e4] text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-semibold" onclick="document.getElementById('productModal').classList.remove('hidden')">
+        <button class="flex items-center gap-2 bg-[#2170e4] text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-semibold" onclick="openAddProductModal()">
             <span class="material-symbols-outlined text-[18px]">add</span>
             Añadir Producto
         </button>
@@ -126,7 +126,7 @@ foreach($productos as $p) {
                             </span>
                         </td>
                         <td class="py-3 px-4 text-right">
-                            <button class="p-1.5 text-gray-400 hover:text-[#2170e4] rounded transition-colors" title="Editar"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+                            <button class="p-1.5 text-gray-400 hover:text-[#2170e4] rounded transition-colors" title="Editar" onclick='openEditProductModal(<?php echo json_encode($p); ?>)'><span class="material-symbols-outlined text-[18px]">edit</span></button>
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -143,20 +143,21 @@ foreach($productos as $p) {
 <div class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center p-4 hidden" id="productModal">
     <div class="bg-white w-full max-w-2xl rounded-xl shadow-xl flex flex-col max-h-[90vh]">
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50 rounded-t-xl">
-            <h3 class="font-outfit text-xl font-bold text-gray-900">Añadir Nuevo Producto</h3>
+            <h3 class="font-outfit text-xl font-bold text-gray-900" id="productModalTitle">Añadir Nuevo Producto</h3>
             <button class="text-gray-400 hover:text-red-500 transition-colors p-1" onclick="document.getElementById('productModal').classList.add('hidden')">
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
         <div class="p-6 overflow-y-auto flex-1">
-            <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form id="formProducto" class="grid grid-cols-1 md:grid-cols-2 gap-6" onsubmit="saveProducto(event)">
+                <input type="hidden" id="id_producto" name="id_producto">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Código de Producto *</label>
-                    <input class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none uppercase" required type="text"/>
+                    <input id="codigo" name="codigo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none uppercase" required type="text"/>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Categoría *</label>
-                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none" required>
+                    <select id="id_categoria" name="id_categoria" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none" required>
                         <option disabled selected value="">Seleccione...</option>
                         <?php foreach($categorias as $cat): ?>
                         <option value="<?php echo $cat['id']; ?>"><?php echo htmlspecialchars($cat['nombre']); ?></option>
@@ -165,22 +166,85 @@ foreach($productos as $p) {
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Nombre del Producto *</label>
-                    <input class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none" required type="text"/>
+                    <input id="nombre" name="nombre" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none" required type="text"/>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Precio Unitario (USD) *</label>
-                    <input class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none tabular-nums" required step="0.01" type="number"/>
+                    <input id="precio" name="precio" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none tabular-nums" required step="0.01" type="number"/>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Stock Inicial *</label>
-                    <input class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none tabular-nums" required type="number"/>
+                    <input id="stock" name="stock" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none tabular-nums" required type="number"/>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Stock Mínimo *</label>
+                    <input id="stock_minimo" name="stock_minimo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none tabular-nums" required type="number" value="5"/>
                 </div>
             </form>
         </div>
         <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-3 rounded-b-xl">
             <button class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors" onclick="document.getElementById('productModal').classList.add('hidden')" type="button">Cancelar</button>
-            <button class="px-5 py-2 text-sm font-semibold bg-[#2170e4] text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm" type="submit">Guardar</button>
+            <button form="formProducto" class="px-5 py-2 text-sm font-semibold bg-[#2170e4] text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm" type="submit">Guardar</button>
         </div>
     </div>
 </div>
+
+<script>
+function openAddProductModal() {
+    document.getElementById('formProducto').reset();
+    document.getElementById('id_producto').value = '';
+    document.getElementById('productModalTitle').innerText = 'Añadir Nuevo Producto';
+    document.getElementById('productModal').classList.remove('hidden');
+}
+
+function openEditProductModal(producto) {
+    document.getElementById('formProducto').reset();
+    document.getElementById('id_producto').value = producto.id;
+    document.getElementById('codigo').value = producto.codigo;
+    document.getElementById('id_categoria').value = producto.id_categoria;
+    document.getElementById('nombre').value = producto.nombre;
+    document.getElementById('precio').value = producto.precio;
+    document.getElementById('stock').value = producto.stock;
+    if (document.getElementById('stock_minimo')) {
+        document.getElementById('stock_minimo').value = producto.stock_minimo;
+    }
+    document.getElementById('productModalTitle').innerText = 'Editar Producto';
+    document.getElementById('productModal').classList.remove('hidden');
+}
+
+async function saveProducto(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries());
+    
+    data.precio = parseFloat(data.precio);
+    data.stock = parseInt(data.stock);
+    data.stock_minimo = parseInt(data.stock_minimo || 5);
+    
+    try {
+        let response;
+        if (data.id_producto) {
+            response = await fetch(`api/productos.php?id=${data.id_producto}`, { 
+                method: 'PUT', 
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data) 
+            });
+        } else {
+            response = await fetch('api/productos.php', { 
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data) 
+            });
+        }
+        if (response.ok) {
+            window.location.reload();
+        } else {
+            alert('Error al guardar el producto');
+        }
+    } catch (e) {
+        console.error(e);
+        alert('Error de conexión');
+    }
+}
+</script>
 <?php require_once 'includes/footer.php'; ?>

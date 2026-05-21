@@ -23,7 +23,7 @@ $tasa_actividad = $total_clientes > 0 ? round(($activos / $total_clientes) * 100
             <button class="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
                 <span class="material-symbols-outlined text-[18px]">download</span> Exportar
             </button>
-            <button class="flex items-center gap-2 px-5 py-2.5 bg-[#2170e4] text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm">
+            <button class="flex items-center gap-2 px-5 py-2.5 bg-[#2170e4] text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm" onclick="openAddClienteModal()">
                 <span class="material-symbols-outlined text-[18px]">person_add</span> Nuevo Cliente
             </button>
         </div>
@@ -104,7 +104,7 @@ $tasa_actividad = $total_clientes > 0 ? round(($activos / $total_clientes) * 100
                             <?php endif; ?>
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <button class="p-1.5 text-gray-500 hover:text-[#2170e4] rounded-md transition-colors" title="Editar"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+                            <button class="p-1.5 text-gray-500 hover:text-[#2170e4] rounded-md transition-colors" title="Editar" onclick='openEditClienteModal(<?php echo json_encode($c); ?>)'><span class="material-symbols-outlined text-[20px]">edit</span></button>
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -116,4 +116,98 @@ $tasa_actividad = $total_clientes > 0 ? round(($activos / $total_clientes) * 100
         </div>
     </div>
 </main>
+
+<!-- Modal Nuevo Cliente -->
+<div class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center p-4 hidden" id="clienteModal">
+    <div class="bg-white w-full max-w-2xl rounded-xl shadow-xl flex flex-col max-h-[90vh]">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50 rounded-t-xl">
+            <h3 class="font-outfit text-xl font-bold text-gray-900" id="clienteModalTitle">Añadir Nuevo Cliente</h3>
+            <button class="text-gray-400 hover:text-red-500 transition-colors p-1" onclick="document.getElementById('clienteModal').classList.add('hidden')">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6 overflow-y-auto flex-1">
+            <form id="formCliente" class="grid grid-cols-1 md:grid-cols-2 gap-6" onsubmit="saveCliente(event)">
+                <input type="hidden" id="id_cliente" name="id_cliente">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Identificación *</label>
+                    <input id="identificacion" name="identificacion" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none uppercase" required type="text"/>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Teléfono</label>
+                    <input id="telefono" name="telefono" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none" type="text"/>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nombre Completo *</label>
+                    <input id="nombre" name="nombre" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none" required type="text"/>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Correo Electrónico</label>
+                    <input id="correo" name="correo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none" type="email"/>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Dirección</label>
+                    <input id="direccion" name="direccion" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[#2170e4] outline-none" type="text"/>
+                </div>
+            </form>
+        </div>
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-3 rounded-b-xl">
+            <button class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors" onclick="document.getElementById('clienteModal').classList.add('hidden')" type="button">Cancelar</button>
+            <button form="formCliente" class="px-5 py-2 text-sm font-semibold bg-[#2170e4] text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm" type="submit">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function openAddClienteModal() {
+    document.getElementById('formCliente').reset();
+    document.getElementById('id_cliente').value = '';
+    document.getElementById('clienteModalTitle').innerText = 'Añadir Nuevo Cliente';
+    document.getElementById('clienteModal').classList.remove('hidden');
+}
+
+function openEditClienteModal(cliente) {
+    document.getElementById('formCliente').reset();
+    document.getElementById('id_cliente').value = cliente.id;
+    document.getElementById('identificacion').value = cliente.identificacion;
+    document.getElementById('nombre').value = cliente.nombre;
+    document.getElementById('telefono').value = cliente.telefono;
+    document.getElementById('correo').value = cliente.correo;
+    document.getElementById('direccion').value = cliente.direccion;
+    document.getElementById('clienteModalTitle').innerText = 'Editar Cliente';
+    document.getElementById('clienteModal').classList.remove('hidden');
+}
+
+async function saveCliente(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries());
+    
+    try {
+        let response;
+        if (data.id_cliente) {
+            response = await fetch(`api/clientes.php?id=${data.id_cliente}`, { 
+                method: 'PUT', 
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data) 
+            });
+        } else {
+            response = await fetch('api/clientes.php', { 
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data) 
+            });
+        }
+        if (response.ok) {
+            window.location.reload();
+        } else {
+            alert('Error al guardar el cliente');
+        }
+    } catch (e) {
+        console.error(e);
+        alert('Error de conexión');
+    }
+}
+</script>
+
 <?php require_once 'includes/footer.php'; ?>
