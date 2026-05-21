@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS tecnomarket_db;
+
 CREATE DATABASE IF NOT EXISTS tecnomarket_db;
 
 USE tecnomarket_db;
