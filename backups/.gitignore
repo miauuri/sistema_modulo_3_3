@@ -1,0 +1,13 @@
+# Archivos de respaldo generados automáticamente — NO versionar
+diarios/
+semanales/
+emergency/
+logs/
+
+# Configuración con credenciales — NO versionar
+config.env
+
+# Archivos SQL sin comprimir y comprimidos
+*.sql
+*.sql.gz
+*.csv
