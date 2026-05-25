@@ -6,7 +6,7 @@ Este es un sistema de Punto de Venta (POS) desarrollado en PHP y MySQL, orientad
 
 Para ejecutar este proyecto, necesitarás un entorno de servidor web local, como **XAMPP**, **WAMP** o **MAMP**, que incluya:
 - PHP (versión 7.4 o superior recomendada).
-- MySQL o MariaDB.
+- MySQL.
 - Servidor Web (Apache o Nginx).
 
 ## Instrucciones de Instalación
