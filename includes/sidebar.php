@@ -33,6 +33,12 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <span class="material-symbols-outlined <?php echo $currentPage == 'reportes.php' ? 'fill-icon' : ''; ?>">analytics</span>
             <span class="font-semibold text-[13px] tracking-wide">Reportes</span>
         </a>
+        <?php if ($_SESSION['id_rol'] == 1): ?>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg mx-2 transition-all <?php echo $currentPage == 'auditoria.php' ? 'bg-[#2170e4] text-white shadow-sm' : 'hover:bg-white/10 hover:translate-x-1'; ?>" href="auditoria.php">
+            <span class="material-symbols-outlined <?php echo $currentPage == 'auditoria.php' ? 'fill-icon' : ''; ?>">history</span>
+            <span class="font-semibold text-[13px] tracking-wide">Auditoría</span>
+        </a>
+        <?php endif; ?>
     </div>
     
     <div class="mt-auto px-2 pb-4 pt-4 border-t border-white/10 space-y-1">
